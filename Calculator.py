@@ -15,8 +15,8 @@ collision_sound = sa.WaveObject.from_wave_file('Collision.wav')
 wn = turtle.getscreen()
 wn.clear()
 wn.bgcolor('lightgreen')
-wn.bgpic('TGGame.gif')
-wn.tracer(2)
+#wn.bgpic('TGGame.gif')
+wn.tracer(3)
 
 # Draw border
 mypen = turtle.Turtle()
@@ -32,23 +32,28 @@ mypen.hideturtle()
 # Create player Turtle
 player = turtle.Turtle()
 player.color('blue')
-player.shape('triangle')
+player.shape('circle')
+player.shapesize(2, 2, 1)
 player.penup()  # delete trace
 player.speed(0)
 
 # Create multiple goals
-max_goals = 6
+max_goals = 25
 goals = []
 for count in range(max_goals):
     goals.append(turtle.Turtle())
     goals[count].color('dark red')
     goals[count].shape('circle')
     goals[count].penup()  # delete trace
-    goals[count].speed(0)
-    goals[count].setposition(random.randint(-230, 230), random.randint(-230, 230))
+    goals[count].speed(2)
+    goals[count].setposition(random.randint(-300, 300), random.randint(-300, 300))
 
 # Set speed variable
 speed = 1
+
+
+# Create the score of the game
+game_score = 0
 
 
 # Define functions
@@ -90,12 +95,12 @@ while True:
 
     # Boundary Checking for player
     if player.xcor() > 330 or player.xcor() < -330:
-        player.right(180)
+        player.right(random.randint(160, 200))
         play_bounce = bounce_sound.play()
         play_bounce.stop()
 
     if player.ycor() > 330 or player.ycor() < -330:
-        player.right(180)
+        player.right(random.randint(160, 200))
         play_bounce = bounce_sound.play()
         play_bounce.stop()
 
@@ -105,17 +110,24 @@ while True:
 
         # Collision checking
         if is_collision(player, goals[count]):
-            goals[count].setposition(random.randint(-320, 320), random.randint(-320, 320))
+            goals[count].setposition(random.randint(-300, 300), random.randint(-300, 300))
             goals[count].right(random.randint(0, 360))
+            game_score += 1
+            # Draw  the score on the screen
+            mypen.undo()
+            mypen.penup()
+            mypen.hideturtle()
+            mypen.setposition (-300, 330)
+            score_string = 'Score: %s' %game_score
+            mypen.write(score_string, False, align='left', font=('Arial', 14, 'normal'))
             play_collision = collision_sound.play()
             play_collision.stop()
 
         # Boundary Checking for goal
         if goals[count].xcor() > 320 or goals[count].xcor() < -320:
-            goals[count].right(180)
-            play_bounce = bounce_sound.play()
-            play_bounce.stop()
+            goals[count].right(random.randint(110, 250))
+
 
         if goals[count].ycor() > 320 or goals[count].ycor() < -320:
-            play_bounce = bounce_sound.play()
-            play_bounce.stop()
+            goals[count].right(random.randint(110, 250))
+
